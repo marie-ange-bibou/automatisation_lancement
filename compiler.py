@@ -5,7 +5,7 @@ from pathlib import Path
 from config import DOCKER_IMAGE
 from detector import CodeType
 
-EXEC_NAME = "exec"
+EXEC_NAME = "exploit"
 
 
 def compile_code(code_dir: Path, code_type: CodeType) -> tuple[bool, str]:
