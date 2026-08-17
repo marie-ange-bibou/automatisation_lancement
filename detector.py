@@ -12,13 +12,15 @@ class CodeType(Enum):
 def detect(code_dir: Path) -> CodeType:
     files = [f for f in code_dir.iterdir() if f.is_file()]
 
+    if files:
+            return CodeType.BINARY
+
     if any(f.name.lower() == "makefile" for f in files):
         return CodeType.MAKEFILE
 
     if any(f.suffix == ".c" for f in files):
         return CodeType.RAW_C
 
-    if files:
-        return CodeType.BINARY
+    
 
     raise ValueError(f"aucun fichier reconnu dans {code_dir}")
