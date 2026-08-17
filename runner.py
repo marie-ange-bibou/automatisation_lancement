@@ -18,7 +18,19 @@ def run_config(code_dir: Path, cpus: int) -> list[float]:
     return durations
 
 
+def _check_executable_present(code_dir: Path) -> None:
+    executable = code_dir / EXEC_NAME
+
+    if not executable.exists():
+        raise FileNotFoundError(f"Exécutable introuvable : {executable}")
+
+    if not executable.is_file():
+        raise ValueError(f"Ce n'est pas un fichier : {executable}")
+
+
 def _run_once(code_dir: Path, cpus: int) -> Optional[float]:
+    _check_executable_present(code_dir)
+
     container_name = f"bench-{uuid.uuid4().hex[:12]}"
     cmd = [
         "docker", "run", "--rm", "--privileged",
@@ -27,7 +39,7 @@ def _run_once(code_dir: Path, cpus: int) -> Optional[float]:
         "-v", f"{code_dir.resolve()}:/code",
         "-w", "/code",
         DOCKER_IMAGE,
-        f"./{EXEC_NAME}",
+        "sh", "-c", f"chmod +x ./{EXEC_NAME} && ./{EXEC_NAME}",
     ]
 
     start = time.perf_counter()
