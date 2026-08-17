@@ -5,8 +5,7 @@ import uuid
 from pathlib import Path
 from typing import Optional
 
-from config import DOCKER_IMAGE, RUNS_PER_CONFIG, TIMEOUT_SECONDS
-from compiler import EXEC_NAME
+from config import DOCKER_IMAGE, EXEC_NAME, RUNS_PER_CONFIG, TIMEOUT_SECONDS
 
 
 def run_config(code_dir: Path, cpus: int) -> list[float]:

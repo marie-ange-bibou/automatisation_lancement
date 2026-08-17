@@ -2,10 +2,8 @@
 import subprocess
 from pathlib import Path
 
-from config import DOCKER_IMAGE
+from config import DOCKER_IMAGE, EXEC_NAME
 from detector import CodeType
-
-EXEC_NAME = "exploit"
 
 
 def compile_code(code_dir: Path, code_type: CodeType) -> tuple[bool, str]:

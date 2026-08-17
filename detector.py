@@ -2,6 +2,8 @@
 from enum import Enum
 from pathlib import Path
 
+from config import EXEC_NAME
+
 
 class CodeType(Enum):
     BINARY = "binary"
@@ -12,15 +14,13 @@ class CodeType(Enum):
 def detect(code_dir: Path) -> CodeType:
     files = [f for f in code_dir.iterdir() if f.is_file()]
 
-    if files:
-            return CodeType.BINARY
+    if any(f.name == EXEC_NAME for f in files):
+        return CodeType.BINARY
 
     if any(f.name.lower() == "makefile" for f in files):
         return CodeType.MAKEFILE
 
     if any(f.suffix == ".c" for f in files):
         return CodeType.RAW_C
-
-    
 
     raise ValueError(f"aucun fichier reconnu dans {code_dir}")
