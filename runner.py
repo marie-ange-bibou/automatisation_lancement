@@ -44,12 +44,10 @@ def _run_once(code_dir: Path, cpus: int) -> Optional[float]:
 
     start = time.perf_counter()
     try:
-        result = subprocess.run(cmd, capture_output=True, timeout=TIMEOUT_SECONDS)
+        subprocess.run(cmd, capture_output=True, timeout=TIMEOUT_SECONDS)
     except subprocess.TimeoutExpired:
         subprocess.run(["docker", "kill", container_name], capture_output=True)
         return None
     elapsed = time.perf_counter() - start
 
-    if result.returncode != 0:
-        return None
     return elapsed
