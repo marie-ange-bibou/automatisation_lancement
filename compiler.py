@@ -2,12 +2,15 @@
 import subprocess
 from pathlib import Path
 
-from config import DOCKER_IMAGE, EXEC_NAME
+from config import DOCKER_IMAGE, EXEC_NAME, image_tag_for
 from detector import CodeType
 
 
 def compile_code(code_dir: Path, code_type: CodeType) -> tuple[bool, str]:
     """Compile (si besoin) et rend le binaire exécutable. Retourne (succès, message d'erreur)."""
+    if code_type == CodeType.DOCKERFILE:
+        return _build_image(code_dir)
+
     if code_type == CodeType.MAKEFILE:
         result = _run_in_container(code_dir, "make")
         if result.returncode != 0:
@@ -29,6 +32,17 @@ def _ensure_executable(code_dir: Path) -> tuple[bool, str]:
     if result.returncode != 0:
         return False, result.stderr.strip()
 
+    return True, ""
+
+
+def _build_image(code_dir: Path) -> tuple[bool, str]:
+    tag = image_tag_for(code_dir)
+    result = subprocess.run(
+        ["docker", "build", "-t", tag, str(code_dir.resolve())],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        return False, result.stderr.strip() or result.stdout.strip()
     return True, ""
 
 

@@ -33,7 +33,7 @@ def main() -> None:
         code_results = {}
         for cpus in CPU_CONFIGS:
             print(f"[{name}] exécution avec --cpus={cpus}...")
-            durations = run_config(code_dir, cpus)
+            durations = run_config(code_dir, cpus, code_type)
             median = median_or_none(durations)
             code_results[f"{cpus}cpu"] = median
             print(f"[{name}] {cpus}cpu -> médiane={median}")

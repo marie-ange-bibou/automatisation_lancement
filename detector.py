@@ -9,10 +9,14 @@ class CodeType(Enum):
     BINARY = "binary"
     MAKEFILE = "makefile"
     RAW_C = "raw_c"
+    DOCKERFILE = "dockerfile"
 
 
 def detect(code_dir: Path) -> CodeType:
     files = [f for f in code_dir.iterdir() if f.is_file()]
+
+    if any(f.name.lower() == "dockerfile" for f in files):
+        return CodeType.DOCKERFILE
 
     if any(f.name == EXEC_NAME for f in files):
         return CodeType.BINARY
